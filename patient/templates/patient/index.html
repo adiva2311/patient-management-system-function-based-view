@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block heading %}
+    <h1>
+        {{heading}}
+    </h1>
+{% endblock heading %}
+
+{% block sub-heading %}
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Nama Pasien</th>
+                <th scope="col">Jenis Kelamin Pasien</th>
+                <th scope="col">Tanggal-Lahir Pasien</th>
+                <th scope="col">Tanggal-Rawat Pasien</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td> {{patient.patient_name}} </td>
+                <td> {{patient.gender}} </td>
+                <td> {{patient.born_date}} </td>
+                <td> {{patient.visit_date}} </td>
+                <td>
+                    <!-- Info Button -->
+                    <a class="btn btn-success" href="{% url "patient:patient_detail" patient.id %}" data-bs-toggle="modal" data-bs-target="#editmodal{{patient.id}}">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    <!-- Update Button -->
+                    <a class="btn btn-warning" href="{% url "patient:edit" patient.id %}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <!-- Delete Button -->
+                    <a class="btn btn-danger" href="{% url "patient:delete" patient.id %}" data-bs-toggle="modal" data-bs-target="#deletemodal{{patient.id}}">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            <!-- Modal (DETAIL PASIEN) -->
+            <div class="modal fade" id="editmodal{{patient.id}}" tabindex="-1" aria-labelledby="editmodal{{patient.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="editmodal{{patient.id}}">
+                                Nama Pasien : {{patient.patient_name}}
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <strong>Tanggal Lahir:</strong>
+                                {{patient.born_date}}
+                            </p>
+                            <p>
+                                <strong>Jenis Kelamin:</strong>
+                                {{patient.gender}}
+                            </p>
+                            <p>
+                                <strong>Gejala Pasien:</strong>
+                                {{patient.symptom}}
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal (DETAIL PASIEN) -->
+
+            <!-- Modal (DELETE PASIEN) -->
+            <div class="modal fade" id="deletemodal{{patient.id}}" tabindex="-1" aria-labelledby="deletemodal{{patient.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="deletemodal{{patient.id}}">Anda Ingin Menghapus Data Ini?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <strong>Nama : </strong>{{patient.patient_name}}
+                            </p>
+                            <p>
+                                <strong>Gejala : </strong>{{patient.symptom}}
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <form action=" {% url "patient:delete" patient.id %} " method="POST">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-danger" value="Delete">
+                            </form>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal (DELETE PASIEN) -->
+            {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-primary" href="{% url "patient:add" %}"> <i class="fa-solid fa-plus"></i> Tambah Pasien </a>
+{% endblock sub-heading %}

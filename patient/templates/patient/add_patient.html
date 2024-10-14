@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block sub-heading %}
+<h1 class="text-center">
+    Add Patient
+</h1>
+
+{% if success %}
+    <div class="alert alert-success">
+        New Patien Has Been Added
+        <a href="{% url "patient:index" %}" class="btn btn-success ms-2"><strong><u>See All Patients</u></strong></a>
+    </div>
+{% else %}
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <form action="{% url "patient:add" %}" method='POST' >
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-primary">Submit Data</button>
+                <a href="{% url "patient:index" %}" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock sub-heading %}
+
+
